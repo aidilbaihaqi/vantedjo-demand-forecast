@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Prediksi Penjualan Ayam - Kios Vantedjo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard Prediksi Penjualan Ayam</h1>
+            <h2>Kios Vantedjo</h2>
+            <div class="period-info">
+                <p>Periode Prediksi: <strong>1 Januari 2025 - 14 Januari 2025</strong></p>
+                <p class="note">Prediksi ini berlaku untuk 14 hari ke depan</p>
+            </div>
+        </header>
+
+        <!-- Statistik Cards -->
+        <div class="stats-container" id="statsContainer">
+            <div class="stat-card">
+                <h3>Ayam Potong</h3>
+                <div class="stat-value" id="statPotong">-</div>
+                <p class="stat-label">Rata-rata Prediksi (kg/hari)</p>
+            </div>
+            <div class="stat-card">
+                <h3>Ayam Kampung</h3>
+                <div class="stat-value" id="statKampung">-</div>
+                <p class="stat-label">Rata-rata Prediksi (kg/hari)</p>
+            </div>
+            <div class="stat-card">
+                <h3>Ayam Tua</h3>
+                <div class="stat-value" id="statTua">-</div>
+                <p class="stat-label">Rata-rata Prediksi (kg/hari)</p>
+            </div>
+        </div>
+
+        <!-- Chart Prediksi -->
+        <div class="chart-container">
+            <h3>Grafik Prediksi 14 Hari</h3>
+            <canvas id="predictionChart"></canvas>
+        </div>
+
+        <!-- Tabel Prediksi -->
+        <div class="table-container">
+            <h3>Detail Prediksi Harian</h3>
+            <table id="predictionTable">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Ayam Potong</th>
+                        <th>Ayam Kampung</th>
+                        <th>Ayam Tua</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="5" class="loading">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <p>© 2025 Kios Vantedjo - Data Mining Project</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
