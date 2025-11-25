@@ -3,7 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 from datetime import datetime, timedelta
 import os
-from arima_predictor import get_predictions
+from arima_predictor import get_predictions as get_arima_predictions
 
 app = Flask(__name__)
 CORS(app)
@@ -44,7 +44,7 @@ def generate_predictions():
             print("Generating predictions using ARIMA model...")
             # Mulai dari 2 Januari karena tgl 1 toko tutup
             start_date = datetime(2025, 1, 2)
-            predictions = get_predictions(start_date=start_date, days=14)
+            predictions = get_arima_predictions(start_date=start_date, days=14)
             
             # Round values untuk display yang lebih baik
             for key in ['ayam_potong', 'ayam_kampung', 'ayam_tua']:

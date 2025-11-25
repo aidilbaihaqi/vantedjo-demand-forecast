@@ -23,7 +23,7 @@ except ImportError:
 class ARIMAPredictor:
     """Class untuk prediksi menggunakan ARIMA"""
     
-    def __init__(self, data_path='notebooks/processed_for_model'):
+    def __init__(self, data_path='data'):
         self.data_path = data_path
         self.models = {}
         

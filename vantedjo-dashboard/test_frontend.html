@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test API Response</h1>
+    <button onclick="testAPI()">Test API</button>
+    <pre id="result"></pre>
+    
+    <script>
+        async function testAPI() {
+            try {
+                console.log('Fetching data...');
+                const response = await fetch('http://localhost:5000/api/predictions');
+                const result = await response.json();
+                
+                console.log('Result:', result);
+                document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+                
+                if (result.success) {
+                    console.log('Ayam Potong:', result.data.ayam_potong);
+                    console.log('Ayam Kampung:', result.data.ayam_kampung);
+                    console.log('Ayam Tua:', result.data.ayam_tua);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            }
+        }
+        
+        // Auto test on load
+        window.onload = testAPI;
+    </script>
+</body>
+</html>
