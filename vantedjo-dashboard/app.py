@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load data yang sudah diproses
-DATA_PATH = 'notebooks/processed_for_model'
+DATA_PATH = 'data'
 
 # Flag untuk menggunakan ARIMA atau baseline
 USE_ARIMA = True  # Set False untuk menggunakan baseline sederhana
