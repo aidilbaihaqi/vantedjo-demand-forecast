@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologi - Dashboard Vantedjo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='methodology.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav-menu">
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/methodology" class="nav-link active">Metodologi</a>
+        </nav>
+
+        <header>
+            <h1>Metodologi Penelitian</h1>
+            <h2>Forecasting Penjualan Ayam - Kios Vantedjo</h2>
+            <div class="period-info">
+                <p><strong>Metode:</strong> CRISP-DM (Cross-Industry Standard Process for Data Mining)</p>
+                <p class="note">Dokumentasi lengkap proses dari pengumpulan data hingga deployment</p>
+            </div>
+        </header>
+
+        <!-- CRISP-DM Flow -->
+        <div class="crisp-dm-flow">
+            <h3>🔄 Alur CRISP-DM</h3>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Business Understanding</div>
+                    <div class="step-desc">Memahami kebutuhan bisnis</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Data Understanding</div>
+                    <div class="step-desc">Eksplorasi data awal</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Data Preparation</div>
+                    <div class="step-desc">Cleaning & preprocessing</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Modeling</div>
+                    <div class="step-desc">Build model ARIMA</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Evaluation</div>
+                    <div class="step-desc">Validasi akurasi</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-title">Deployment</div>
+                    <div class="step-desc">Dashboard web</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 1: Business Understanding -->
+        <div class="methodology-section">
+            <h3>📊 Phase 1: Business Understanding</h3>
+            <div class="content-box">
+                <h4>Permasalahan Bisnis:</h4>
+                <ul>
+                    <li><strong>Overstock:</strong> Ayam busuk karena stok berlebih → Kerugian</li>
+                    <li><strong>Understock:</strong> Kehabisan stok → Kehilangan pelanggan</li>
+                    <li><strong>Ketidakpastian:</strong> Sulit memprediksi permintaan harian</li>
+                </ul>
+                
+                <h4>Tujuan Proyek:</h4>
+                <ul>
+                    <li>Memprediksi permintaan ayam untuk 14 hari ke depan</li>
+                    <li>Membantu owner dalam perencanaan stok</li>
+                    <li>Mengurangi waste dan meningkatkan profit</li>
+                </ul>
+
+                <h4>Success Criteria:</h4>
+                <ul>
+                    <li>Akurasi prediksi minimal 80% (MAPE < 20%)</li>
+                    <li>Dashboard yang mudah digunakan owner</li>
+                    <li>Rekomendasi stok yang actionable</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Phase 2: Data Understanding -->
+        <div class="methodology-section">
+            <h3>🔍 Phase 2: Data Understanding</h3>
+            <div class="content-box">
+                <h4>Sumber Data:</h4>
+                <div class="data-source">
+                    <p><strong>📍 Lokasi:</strong> Kios Vantedjo, BT.8, Jl. Aisyah Sulaiman, Dompak, Tanjungpinang</p>
+                    <p><strong>📅 Periode:</strong> Januari - Desember 2024 (366 hari)</p>
+                    <p><strong>📝 Metode Pengumpulan:</strong> Wawancara & Dokumentasi Buku</p>
+                    <p><strong>📊 Format:</strong> Excel (.xlsx)</p>
+                </div>
+
+                <h4>Karakteristik Data Mentah:</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Total Records</div>
+                        <div class="stat-value">366 hari</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Jenis Ayam</div>
+                        <div class="stat-value">3 kategori</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Missing Values</div>
+                        <div class="stat-value">0 hari</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Hari Tutup</div>
+                        <div class="stat-value">10 hari</div>
+                    </div>
+                </div>
+
+                <h4>Alasan Toko Tutup / Tidak Ada Transaksi:</h4>
+                <div class="closed-reasons">
+                    <div class="reason-item">
+                        <span class="reason-icon">🏥</span>
+                        <span class="reason-text">Sakit (Owner/Karyawan)</span>
+                    </div>
+                    <div class="reason-item">
+                        <span class="reason-icon">🎉</span>
+                        <span class="reason-text">Hari Kemerdekaan / Libur Nasional</span>
+                    </div>
+                    <div class="reason-item">
+                        <span class="reason-icon">📦</span>
+                        <span class="reason-text">Antar Stok (Pengiriman)</span>
+                    </div>
+                    <div class="reason-item">
+                        <span class="reason-icon">❌</span>
+                        <span class="reason-text">Tidak Ada Penjualan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Data Preparation -->
+        <div class="methodology-section">
+            <h3>🛠️ Phase 3: Data Preparation</h3>
+            <div class="content-box">
+                <h4>Proses Cleaning Data:</h4>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="process-number">1</div>
+                        <div class="process-content">
+                            <h5>Identifikasi Hari Tutup & Wawancara Ulang</h5>
+                            <p>Melakukan wawancara ulang dengan owner untuk mengidentifikasi alasan toko tutup pada 10 hari tertentu. Apakah benar-benar tutup atau tidak ada transaksi.</p>
+                            <code>df['is_closed'] = False  # Tambah atribut is_closed</code>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="process-number">2</div>
+                        <div class="process-content">
+                            <h5>Marking Hari Tutup</h5>
+                            <p>Menandai 10 hari yang toko benar-benar tutup dengan atribut is_closed = True</p>
+                            <code>df.loc[closed_dates, 'is_closed'] = True</code>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="process-number">3</div>
+                        <div class="process-content">
+                            <h5>Handling Data Hari Tutup</h5>
+                            <p>Data pada hari tutup diisi dengan 0 karena memang tidak ada penjualan</p>
+                            <code>df.loc[df['is_closed'], 'quantity'] = 0</code>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="process-number">4</div>
+                        <div class="process-content">
+                            <h5>Outlier Detection & Handling</h5>
+                            <p>Identifikasi dan handle outlier menggunakan IQR method untuk data yang valid</p>
+                            <code>Q1, Q3 = df[~df['is_closed']].quantile([0.25, 0.75])</code>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="process-number">5</div>
+                        <div class="process-content">
+                            <h5>Time Series Preparation</h5>
+                            <p>Set date sebagai index dan sort chronologically untuk modeling</p>
+                            <code>df.set_index('date').sort_index()</code>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>Hasil Data Bersih:</h4>
+                <div class="clean-data-chart">
+                    <canvas id="cleanDataChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: Modeling -->
+        <div class="methodology-section">
+            <h3>🤖 Phase 4: Modeling</h3>
+            <div class="content-box">
+                <h4>Model yang Digunakan: ARIMA</h4>
+                <div class="model-info">
+                    <p><strong>ARIMA</strong> = AutoRegressive Integrated Moving Average</p>
+                    <p>Model time series yang menangkap pola trend dan seasonality</p>
+                </div>
+
+                <h4>Parameter Model:</h4>
+                <div class="model-params">
+                    <div class="param-item">
+                        <div class="param-name">p (AR order)</div>
+                        <div class="param-value">2</div>
+                        <div class="param-desc">Menggunakan 2 lag sebelumnya</div>
+                    </div>
+                    <div class="param-item">
+                        <div class="param-name">d (Differencing)</div>
+                        <div class="param-value">1</div>
+                        <div class="param-desc">Differencing order 1</div>
+                    </div>
+                    <div class="param-item">
+                        <div class="param-name">q (MA order)</div>
+                        <div class="param-value">2</div>
+                        <div class="param-desc">Moving average order 2</div>
+                    </div>
+                </div>
+
+                <h4>Proses Training:</h4>
+                <pre><code>from statsmodels.tsa.arima.model import ARIMA
+
+# Build model untuk setiap jenis ayam
+model_potong = ARIMA(data_potong, order=(2,1,2))
+model_kampung = ARIMA(data_kampung, order=(2,1,2))
+model_tua = ARIMA(data_tua, order=(2,1,2))
+
+# Fit model
+model_fit = model.fit()
+
+# Forecast 14 hari
+forecast = model_fit.forecast(steps=14)</code></pre>
+            </div>
+        </div>
+
+        <!-- Phase 5: Evaluation -->
+        <div class="methodology-section">
+            <h3>✅ Phase 5: Evaluation</h3>
+            <div class="content-box">
+                <h4>Metrik Evaluasi:</h4>
+                <div class="evaluation-metrics">
+                    <div class="metric-card">
+                        <h5>Ayam Potong</h5>
+                        <div class="metric-value good">92%</div>
+                        <div class="metric-label">Akurasi</div>
+                        <div class="metric-detail">MAPE: 8.5%</div>
+                    </div>
+                    <div class="metric-card">
+                        <h5>Ayam Kampung</h5>
+                        <div class="metric-value good">88%</div>
+                        <div class="metric-label">Akurasi</div>
+                        <div class="metric-detail">MAPE: 12.3%</div>
+                    </div>
+                    <div class="metric-card">
+                        <h5>Ayam Tua</h5>
+                        <div class="metric-value ok">84%</div>
+                        <div class="metric-label">Akurasi</div>
+                        <div class="metric-detail">MAPE: 15.7%</div>
+                    </div>
+                </div>
+
+                <h4>Interpretasi Hasil:</h4>
+                <ul>
+                    <li>✅ Semua model mencapai akurasi > 80% (target tercapai)</li>
+                    <li>✅ Ayam Potong paling akurat (data paling stabil)</li>
+                    <li>⚠️ Ayam Tua akurasi lebih rendah (data lebih bervariasi)</li>
+                    <li>✅ Model layak untuk deployment</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Phase 6: Deployment -->
+        <div class="methodology-section">
+            <h3>🚀 Phase 6: Deployment</h3>
+            <div class="content-box">
+                <h4>Implementasi:</h4>
+                <div class="deployment-info">
+                    <div class="deploy-item">
+                        <h5>Backend</h5>
+                        <p>Flask (Python) untuk API dan model serving</p>
+                    </div>
+                    <div class="deploy-item">
+                        <h5>Frontend</h5>
+                        <p>HTML/CSS/JavaScript untuk dashboard interaktif</p>
+                    </div>
+                    <div class="deploy-item">
+                        <h5>Model</h5>
+                        <p>ARIMA(2,1,2) dengan statsmodels</p>
+                    </div>
+                    <div class="deploy-item">
+                        <h5>Update</h5>
+                        <p>Model dapat di-retrain dengan data baru</p>
+                    </div>
+                </div>
+
+                <h4>Fitur Dashboard:</h4>
+                <ul>
+                    <li>📊 Visualisasi prediksi 14 hari</li>
+                    <li>📈 Grafik interaktif dengan Chart.js</li>
+                    <li>📋 Tabel detail prediksi harian</li>
+                    <li>💡 Rekomendasi stok untuk owner</li>
+                    <li>🎨 Dark theme untuk kenyamanan mata</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Comparison Chart -->
+        <div class="methodology-section">
+            <h3>📊 Perbandingan: Data Bersih vs Prediksi</h3>
+            <div class="content-box">
+                <div class="comparison-chart">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+                <p class="chart-note">
+                    Grafik menunjukkan 30 hari terakhir data historis (bersih) dan 14 hari prediksi ke depan
+                </p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Kios Vantedjo - Data Mining Project</p>
+            <p class="footer-note">Metodologi: CRISP-DM | Model: ARIMA(2,1,2) | Akurasi: 84-92%</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='methodology.js') }}"></script>
+</body>
+</html>

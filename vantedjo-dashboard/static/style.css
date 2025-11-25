@@ -4,6 +4,35 @@
     box-sizing: border-box;
 }
 
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+    gap: 20px;
+    padding: 20px 40px;
+    background: #1f1f1f;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.nav-link {
+    color: #a0a0a0;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background: #252525;
+    color: #e0e0e0;
+}
+
+.nav-link.active {
+    background: #252525;
+    color: #ffffff;
+    border-bottom: 2px solid #60a5fa;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #0f0f0f;
