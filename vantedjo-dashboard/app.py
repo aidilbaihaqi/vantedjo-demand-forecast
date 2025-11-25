@@ -42,7 +42,8 @@ def generate_predictions():
     if USE_ARIMA:
         try:
             print("Generating predictions using ARIMA model...")
-            start_date = datetime(2025, 1, 1)
+            # Mulai dari 2 Januari karena tgl 1 toko tutup
+            start_date = datetime(2025, 1, 2)
             predictions = get_predictions(start_date=start_date, days=14)
             
             # Round values untuk display yang lebih baik
@@ -62,8 +63,8 @@ def generate_predictions():
     if not data:
         return None
     
-    # Tanggal prediksi: 1-14 Januari 2025
-    start_date = datetime(2025, 1, 1)
+    # Tanggal prediksi: 2-15 Januari 2025 (skip tgl 1 karena toko tutup)
+    start_date = datetime(2025, 1, 2)
     prediction_dates = [start_date + timedelta(days=i) for i in range(14)]
     
     predictions = {
@@ -105,8 +106,8 @@ def get_predictions():
         return jsonify({
             'success': True,
             'data': predictions,
-            'period': '1 Januari 2025 - 14 Januari 2025',
-            'message': 'Prediksi berlaku untuk 14 hari ke depan'
+            'period': '2 Januari 2025 - 15 Januari 2025',
+            'message': 'Prediksi berlaku untuk 14 hari ke depan (tanggal 1 Januari di-skip karena toko tutup)'
         })
     else:
         return jsonify({

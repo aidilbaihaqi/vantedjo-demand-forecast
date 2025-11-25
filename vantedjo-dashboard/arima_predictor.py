@@ -67,19 +67,25 @@ class ARIMAPredictor:
             print(f"Error in train_and_forecast: {e}")
             return None
     
-    def predict_all_categories(self, start_date=None, days=14):
+    def predict_all_categories(self, start_date=None, days=14, skip_dates=None):
         """
         Generate prediksi untuk semua kategori ayam
         
         Args:
-            start_date: tanggal mulai prediksi (default: 1 Jan 2025)
+            start_date: tanggal mulai prediksi (default: 2 Jan 2025, skip tgl 1)
             days: jumlah hari prediksi (default: 14)
+            skip_dates: list tanggal yang harus di-skip (toko tutup)
             
         Returns:
             dict dengan prediksi untuk setiap kategori
         """
         if start_date is None:
-            start_date = datetime(2025, 1, 1)
+            # Mulai dari tanggal 2 Januari karena tgl 1 toko tutup
+            start_date = datetime(2025, 1, 2)
+        
+        if skip_dates is None:
+            # Default: skip tanggal 1 Januari setiap tahun
+            skip_dates = []
         
         # Load data untuk setiap kategori
         data_configs = [
@@ -107,11 +113,30 @@ class ARIMAPredictor:
             'dates': [],
             'ayam_potong': [],
             'ayam_kampung': [],
-            'ayam_tua': []
+            'ayam_tua': [],
+            'notes': []  # Catatan untuk tanggal tertentu (misal: toko tutup)
         }
         
         # Generate tanggal prediksi
-        prediction_dates = [start_date + timedelta(days=i) for i in range(days)]
+        prediction_dates = []
+        current_date = start_date
+        days_added = 0
+        
+        while days_added < days:
+            # Skip tanggal 1 Januari
+            if current_date.month == 1 and current_date.day == 1:
+                current_date += timedelta(days=1)
+                continue
+            
+            # Skip tanggal yang ada di skip_dates
+            if current_date.strftime('%Y-%m-%d') in skip_dates:
+                current_date += timedelta(days=1)
+                continue
+            
+            prediction_dates.append(current_date)
+            days_added += 1
+            current_date += timedelta(days=1)
+        
         predictions['dates'] = [d.strftime('%Y-%m-%d') for d in prediction_dates]
         
         # Generate prediksi untuk setiap kategori
@@ -129,39 +154,52 @@ class ARIMAPredictor:
                     # Ambil nilai prediksi dan pastikan tidak negatif
                     values = [max(0, float(v)) for v in forecast.values]
                     predictions[config['key']] = values
+                    
+                    # Tambahkan catatan untuk setiap tanggal
+                    for date in prediction_dates:
+                        if date.month == 1 and date.day == 1:
+                            predictions['notes'].append('Toko tutup')
+                        else:
+                            predictions['notes'].append('')
                 else:
                     # Fallback ke rata-rata jika gagal
                     avg = series.tail(14).mean()
-                    predictions[config['key']] = [float(avg)] * days
+                    predictions[config['key']] = [float(avg)] * len(prediction_dates)
             else:
                 # Fallback jika data tidak bisa diload
-                predictions[config['key']] = [0.0] * days
+                predictions[config['key']] = [0.0] * len(prediction_dates)
         
         return predictions
 
 
-def get_predictions(start_date=None, days=14):
+def get_predictions(start_date=None, days=14, skip_dates=None):
     """
     Helper function untuk mendapatkan prediksi
     
     Args:
-        start_date: tanggal mulai prediksi
+        start_date: tanggal mulai prediksi (default: 2 Jan 2025)
         days: jumlah hari prediksi
+        skip_dates: list tanggal yang harus di-skip
         
     Returns:
         dict dengan prediksi
     """
     predictor = ARIMAPredictor()
-    return predictor.predict_all_categories(start_date, days)
+    return predictor.predict_all_categories(start_date, days, skip_dates)
 
 
 if __name__ == "__main__":
     # Test predictor
     print("Testing ARIMA Predictor...")
+    print("Note: Tanggal 1 Januari di-skip karena toko tutup\n")
     predictions = get_predictions()
     
-    print(f"\nPrediksi untuk {len(predictions['dates'])} hari:")
+    print(f"Prediksi untuk {len(predictions['dates'])} hari:")
     print(f"Tanggal: {predictions['dates'][0]} - {predictions['dates'][-1]}")
     print(f"\nAyam Potong (rata-rata): {sum(predictions['ayam_potong'])/len(predictions['ayam_potong']):.2f} kg/hari")
     print(f"Ayam Kampung (rata-rata): {sum(predictions['ayam_kampung'])/len(predictions['ayam_kampung']):.2f} kg/hari")
     print(f"Ayam Tua (rata-rata): {sum(predictions['ayam_tua'])/len(predictions['ayam_tua']):.2f} kg/hari")
+    
+    print(f"\nDetail prediksi:")
+    for i, date in enumerate(predictions['dates']):
+        print(f"{date}: AP={predictions['ayam_potong'][i]:.2f}, AK={predictions['ayam_kampung'][i]:.2f}, AT={predictions['ayam_tua'][i]:.2f}")
