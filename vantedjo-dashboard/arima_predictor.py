@@ -1,6 +1,7 @@
 """
 ARIMA Predictor Module
 Modul untuk generate prediksi 14 hari menggunakan model ARIMA
+Updated: Menggunakan parameter ARIMA yang lebih baik untuk variasi prediksi
 """
 
 import pandas as pd
@@ -8,6 +9,15 @@ from statsmodels.tsa.arima.model import ARIMA
 from datetime import datetime, timedelta
 import warnings
 warnings.filterwarnings('ignore')
+
+# Optional: Install pmdarima untuk auto ARIMA
+# pip install pmdarima
+try:
+    from pmdarima import auto_arima
+    AUTO_ARIMA_AVAILABLE = True
+except ImportError:
+    AUTO_ARIMA_AVAILABLE = False
+    print("Note: pmdarima tidak terinstall. Menggunakan parameter manual.")
 
 
 class ARIMAPredictor:
@@ -27,19 +37,56 @@ class ARIMAPredictor:
             print(f"Error loading {filename}: {e}")
             return None
     
-    def train_and_forecast(self, series, order=(1, 1, 1), steps=14):
+    def find_best_order(self, series):
+        """
+        Cari parameter ARIMA terbaik menggunakan auto_arima atau grid search
+        
+        Args:
+            series: pandas Series dengan data time series
+            
+        Returns:
+            tuple (p, d, q) terbaik
+        """
+        if AUTO_ARIMA_AVAILABLE:
+            try:
+                # Gunakan auto_arima untuk mencari parameter terbaik
+                model = auto_arima(
+                    series,
+                    start_p=0, max_p=3,
+                    start_q=0, max_q=3,
+                    d=1,  # differencing order
+                    seasonal=False,
+                    trace=False,
+                    error_action='ignore',
+                    suppress_warnings=True,
+                    stepwise=True
+                )
+                return model.order
+            except:
+                pass
+        
+        # Fallback: Gunakan parameter yang lebih baik dari (1,1,1)
+        # Berdasarkan analisis data penjualan yang bervariasi
+        return (2, 1, 2)  # ARIMA(2,1,2) lebih baik untuk data dengan variasi
+    
+    def train_and_forecast(self, series, order=None, steps=14):
         """
         Train model ARIMA dan generate forecast
         
         Args:
             series: pandas Series dengan data time series
-            order: tuple (p, d, q) untuk ARIMA
+            order: tuple (p, d, q) untuk ARIMA (None = auto detect)
             steps: jumlah hari untuk forecast
             
         Returns:
             pandas Series dengan forecast values
         """
         try:
+            # Jika order tidak diberikan, cari yang terbaik
+            if order is None:
+                order = self.find_best_order(series)
+                print(f"  Using ARIMA{order}")
+            
             # Build dan fit model ARIMA
             model = ARIMA(series, order=order)
             model_fit = model.fit()
@@ -88,24 +135,25 @@ class ARIMAPredictor:
             skip_dates = []
         
         # Load data untuk setiap kategori
+        # order=None akan auto-detect parameter terbaik
         data_configs = [
             {
                 'filename': 'ts_ayam_potong_clean.csv',
                 'column': 'Ayam_Potong',
                 'key': 'ayam_potong',
-                'order': (1, 1, 1)  # ARIMA order untuk Ayam Potong
+                'order': None  # Auto-detect atau gunakan (2,1,2)
             },
             {
                 'filename': 'ts_ayam_kampung_clean.csv',
                 'column': 'Ayam_Kampung',
                 'key': 'ayam_kampung',
-                'order': (1, 1, 1)  # ARIMA order untuk Ayam Kampung
+                'order': None  # Auto-detect atau gunakan (2,1,2)
             },
             {
                 'filename': 'ts_ayam_tua_clean.csv',
                 'column': 'Ayam_Tua',
                 'key': 'ayam_tua',
-                'order': (1, 1, 1)  # ARIMA order untuk Ayam Tua
+                'order': None  # Auto-detect atau gunakan (2,1,2)
             }
         ]
         
