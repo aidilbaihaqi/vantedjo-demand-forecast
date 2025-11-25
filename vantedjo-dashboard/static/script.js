@@ -52,26 +52,44 @@ function updateChart(data) {
                 {
                     label: 'Ayam Potong',
                     data: data.ayam_potong,
-                    borderColor: '#f5576c',
-                    backgroundColor: 'rgba(245, 87, 108, 0.1)',
+                    borderColor: '#60a5fa',
+                    backgroundColor: 'rgba(96, 165, 250, 0.1)',
                     tension: 0.4,
-                    fill: true
+                    fill: true,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#60a5fa',
+                    pointBorderColor: '#1e40af',
+                    pointBorderWidth: 2
                 },
                 {
                     label: 'Ayam Kampung',
                     data: data.ayam_kampung,
-                    borderColor: '#4facfe',
-                    backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                    borderColor: '#34d399',
+                    backgroundColor: 'rgba(52, 211, 153, 0.1)',
                     tension: 0.4,
-                    fill: true
+                    fill: true,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#34d399',
+                    pointBorderColor: '#047857',
+                    pointBorderWidth: 2
                 },
                 {
                     label: 'Ayam Tua',
                     data: data.ayam_tua,
-                    borderColor: '#43e97b',
-                    backgroundColor: 'rgba(67, 233, 123, 0.1)',
+                    borderColor: '#fbbf24',
+                    backgroundColor: 'rgba(251, 191, 36, 0.1)',
                     tension: 0.4,
-                    fill: true
+                    fill: true,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#fbbf24',
+                    pointBorderColor: '#b45309',
+                    pointBorderWidth: 2
                 }
             ]
         },
@@ -81,6 +99,13 @@ function updateChart(data) {
             plugins: {
                 legend: {
                     position: 'top',
+                    labels: {
+                        color: '#e0e0e0',
+                        font: {
+                            size: 12
+                        },
+                        padding: 15
+                    }
                 },
                 title: {
                     display: false
@@ -91,13 +116,31 @@ function updateChart(data) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Jumlah (kg)'
+                        text: 'Jumlah (kg)',
+                        color: '#a0a0a0'
+                    },
+                    ticks: {
+                        color: '#888888'
+                    },
+                    grid: {
+                        color: '#2a2a2a',
+                        drawBorder: false
                     }
                 },
                 x: {
                     title: {
                         display: true,
-                        text: 'Tanggal'
+                        text: 'Tanggal',
+                        color: '#a0a0a0'
+                    },
+                    ticks: {
+                        color: '#888888',
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    grid: {
+                        color: '#2a2a2a',
+                        drawBorder: false
                     }
                 }
             }
