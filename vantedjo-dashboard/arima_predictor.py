@@ -65,9 +65,9 @@ class ARIMAPredictor:
             except:
                 pass
         
-        # Fallback: Gunakan parameter yang lebih baik dari (1,1,1)
-        # Berdasarkan analisis data penjualan yang bervariasi
-        return (2, 1, 2)  # ARIMA(2,1,2) lebih baik untuk data dengan variasi
+        # Fallback: Gunakan parameter ARIMA(2,1,2)
+        # Parameter ini lebih baik untuk data dengan variasi
+        return (2, 1, 2)  # ARIMA(2,1,2) untuk prediksi lebih akurat
     
     def train_and_forecast(self, series, order=None, steps=14):
         """
@@ -141,19 +141,19 @@ class ARIMAPredictor:
                 'filename': 'ts_ayam_potong_clean.csv',
                 'column': 'Ayam_Potong',
                 'key': 'ayam_potong',
-                'order': None  # Auto-detect atau gunakan (2,1,2)
+                'order': (2, 1, 2)  # ARIMA(2,1,2) untuk variasi lebih baik
             },
             {
                 'filename': 'ts_ayam_kampung_clean.csv',
                 'column': 'Ayam_Kampung',
                 'key': 'ayam_kampung',
-                'order': None  # Auto-detect atau gunakan (2,1,2)
+                'order': (2, 1, 2)  # ARIMA(2,1,2) untuk variasi lebih baik
             },
             {
                 'filename': 'ts_ayam_tua_clean.csv',
                 'column': 'Ayam_Tua',
                 'key': 'ayam_tua',
-                'order': None  # Auto-detect atau gunakan (2,1,2)
+                'order': (2, 1, 2)  # ARIMA(2,1,2) untuk variasi lebih baik
             }
         ]
         
