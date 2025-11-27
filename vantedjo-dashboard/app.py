@@ -97,11 +97,6 @@ def index():
     """Render halaman dashboard"""
     return render_template('index.html')
 
-@app.route('/methodology')
-def methodology():
-    """Render halaman metodologi"""
-    return render_template('methodology.html')
-
 @app.route('/api/predictions')
 def get_predictions():
     """API endpoint untuk mendapatkan prediksi 14 hari"""
