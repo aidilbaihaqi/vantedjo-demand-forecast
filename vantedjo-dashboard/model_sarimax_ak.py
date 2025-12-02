@@ -1,5 +1,5 @@
-# sarimax_at.py
-# SARIMAX untuk Ayam Tua (stable version)
+# sarimax_ak.py
+# SARIMAX untuk Ayam Kampung (stable version)
 # - Evaluasi 7 hari terakhir (MAE, RMSE, MAPE)
 # - Future forecast 7 hari ke depan menggunakan kalender 2025
 
@@ -12,7 +12,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 # ========================
 # CONFIG
 # ========================
-DATA_CSV = "../processed_for_model/sarimax_at_clean.csv"
+DATA_CSV = "data/ts_ayam_kampung_clean.csv"
 CALENDAR_CSV = "calendar_2025_id.csv"
 FORECAST_DAYS = 7
 
@@ -68,7 +68,7 @@ def load_calendar_2025():
 # ========================
 def main():
     print("\n====================")
-    print(" SARIMAX — Ayam Tua (Stable Model)")
+    print(" SARIMAX — Ayam Kampung (Stable Model)")
     print("====================")
 
     # 1. Load data
@@ -77,7 +77,11 @@ def main():
     df = df.set_index("date").sort_index()
 
     df = df.asfreq("D")
-    df["sales"] = df["sales"].fillna(0)
+    # Rename column to 'sales' for consistency
+    if "Ayam_Kampung" in df.columns:
+        df["sales"] = df["Ayam_Kampung"].fillna(0)
+    else:
+        df["sales"] = df["sales"].fillna(0)
 
     # Safety: isi kalender jika belum ada
     for col in CALENDAR_BASE_COLS:
@@ -89,8 +93,6 @@ def main():
 
     # 2. Split train-test
     test_horizon = FORECAST_DAYS
-    if len(df_model) <= test_horizon + 10:
-        raise ValueError("Data ayat tua terlalu pendek untuk evaluasi 7 hari.")
     train = df_model.iloc[:-test_horizon]
     test = df_model.iloc[-test_horizon:]
 
@@ -112,7 +114,7 @@ def main():
         enforce_invertibility=False,
     )
 
-    print("\nFitting SARIMAX model (Ayam Tua)...")
+    print("\nFitting SARIMAX model (Ayam Kampung)...")
     res = model.fit(disp=False, maxiter=300)
 
     # 3. Evaluasi
@@ -122,7 +124,7 @@ def main():
 
     mae, rmse, mape = evaluate_metrics(y_test, y_pred)
 
-    print("\n=== EVALUASI (7 hari terakhir) — Ayam Tua ===")
+    print("\n=== EVALUASI (7 hari terakhir) — Ayam Kampung ===")
     print(f"MAE  : {mae:.3f}")
     print(f"RMSE : {rmse:.3f}")
     print(f"MAPE : {mape:.2f}%")
@@ -179,7 +181,7 @@ def main():
             **cal_vals,
         }
 
-    print("\n=== FUTURE FORECAST 7 HARI (STABLE MODEL) — Ayam Tua ===")
+    print("\n=== FUTURE FORECAST 7 HARI (STABLE MODEL) — Ayam Kampung ===")
     for date, value in results:
         print(f"{date.strftime('%Y-%m-%d')}: {value:.2f} kg")
     

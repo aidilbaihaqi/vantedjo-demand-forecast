@@ -12,7 +12,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 # ========================
 # CONFIG
 # ========================
-DATA_CSV = "../processed_for_model/sarimax_at_clean.csv"
+DATA_CSV = "data/ts_ayam_tua_clean.csv"
 CALENDAR_CSV = "calendar_2025_id.csv"
 FORECAST_DAYS = 7
 
@@ -77,7 +77,11 @@ def main():
     df = df.set_index("date").sort_index()
 
     df = df.asfreq("D")
-    df["sales"] = df["sales"].fillna(0)
+    # Rename column to 'sales' for consistency
+    if "Ayam_Tua" in df.columns:
+        df["sales"] = df["Ayam_Tua"].fillna(0)
+    else:
+        df["sales"] = df["sales"].fillna(0)
 
     # Safety: isi kalender jika belum ada
     for col in CALENDAR_BASE_COLS:

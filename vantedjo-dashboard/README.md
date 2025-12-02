@@ -71,9 +71,10 @@ jupyter notebook
 ### Model Approach
 
 - **Baseline:** Naive & Seasonal Naive forecasts
-- **Primary:** SARIMA with seasonal patterns (s=7)
-- **Enhancement:** ARIMAX with calendar features
-- **Validation:** Rolling-origin cross-validation
+- **Primary:** SARIMAX(1,1,1)(1,1,1,7) with seasonal patterns (s=7)
+- **Enhancement:** Exogenous variables (calendar, event, lag, MA)
+- **Validation:** Rolling-origin cross-validation (7 hari terakhir)
+- **Forecast Horizon:** 7 hari ke depan dengan dynamic forecasting
 
 ## 📊 Key Performance Indicators
 
@@ -129,12 +130,12 @@ Key libraries dalam `requirements.txt`:
 ## 📋 Status Proyek
 
 **Current Phase:** Week 6 - Dashboard, SOP, final presentation
-**Last Updated:** November 2025
-**Version:** 2.0.0 (with ARIMA Integration)
+**Last Updated:** December 2025
+**Version:** 3.0.0 (with SARIMAX Integration)
 
 ## 🌐 Dashboard Web
 
-Dashboard interaktif untuk visualisasi prediksi 14 hari dengan **Model ARIMA** telah tersedia!
+Dashboard interaktif untuk visualisasi prediksi 7 hari dengan **Model SARIMAX** telah tersedia!
 
 ### ⚡ Quick Start Dashboard:
 ```bash
@@ -147,16 +148,24 @@ python app.py
 
 Akses di: `http://localhost:5000`
 
-### 🤖 Model ARIMA
-Dashboard menggunakan **ARIMA(1,1,1)** untuk prediksi yang lebih akurat:
-- ✅ Training otomatis dengan data historis 2024
-- ✅ Forecast 14 hari ke depan (1-14 Januari 2025)
-- ✅ Mempertimbangkan trend dan pola historis
+### 🤖 Model SARIMAX
+Dashboard menggunakan **SARIMAX(1,1,1)(1,1,1,7)** untuk prediksi yang lebih akurat:
+- ✅ Menggunakan model asli dari notebooks/model/ (hasil evaluasi terbukti)
+- ✅ Forecast 7 hari ke depan dengan dynamic forecasting
+- ✅ Menangkap pola seasonal (weekly pattern)
+- ✅ Menggunakan exogenous variables (kalender, event, lag, MA)
+- ✅ Akurasi sangat baik: AP (MAPE 4.83%), AK (MAPE 4.09%), AT (MAPE 7.75%)
+
+### 📊 Keunggulan SARIMAX vs ARIMA
+- 🎯 Menangkap pola seasonal (weekly pattern) secara eksplisit
+- 📊 Menggunakan exogenous variables untuk akurasi lebih tinggi
+- 🔄 Dynamic forecasting yang lebih adaptif
+- ✨ Dapat memprediksi dampak event/libur terhadap permintaan
 
 ### 📚 Dokumentasi Lengkap
 - **[CARA_MENJALANKAN.md](CARA_MENJALANKAN.md)** - Panduan lengkap (Bahasa Indonesia)
 - **[DASHBOARD_README.md](DASHBOARD_README.md)** - Dokumentasi dashboard
-- **[ARIMA_INTEGRATION.md](ARIMA_INTEGRATION.md)** - Detail integrasi ARIMA
+- **[SARIMAX_INTEGRATION.md](SARIMAX_INTEGRATION.md)** - Detail integrasi SARIMAX
 - **[DOKUMENTASI_INDEX.md](DOKUMENTASI_INDEX.md)** - Index semua dokumentasi
 
 ---

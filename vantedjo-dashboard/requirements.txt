@@ -35,4 +35,5 @@ kaleido>=0.2.1
 flask>=2.3.0
 flask-cors>=4.0.0
 
-# Note: statsmodels sudah ada di atas untuk ARIMA modeling
+# Note: statsmodels sudah ada di atas untuk SARIMAX modeling
+# SARIMAX(1,1,1)(1,1,1,7) dengan exogenous variables

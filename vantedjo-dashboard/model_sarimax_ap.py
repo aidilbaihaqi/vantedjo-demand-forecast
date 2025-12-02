@@ -1,7 +1,7 @@
-# sarimax_at.py
-# SARIMAX untuk Ayam Tua (stable version)
+# sarimax_ap.py
+# SARIMAX untuk Ayam Potong (stabil version)
 # - Evaluasi 7 hari terakhir (MAE, RMSE, MAPE)
-# - Future forecast 7 hari ke depan menggunakan kalender 2025
+# - Future forecast 7 hari ke depan (setelah last_date) pakai kalender 2025
 
 import pandas as pd
 import numpy as np
@@ -12,7 +12,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 # ========================
 # CONFIG
 # ========================
-DATA_CSV = "../processed_for_model/sarimax_at_clean.csv"
+DATA_CSV = "data/ts_ayam_potong_clean.csv"
 CALENDAR_CSV = "calendar_2025_id.csv"
 FORECAST_DAYS = 7
 
@@ -30,8 +30,8 @@ CALENDAR_BASE_COLS = [
 # HELPER FUNCTIONS
 # ========================
 def prepare_features(df: pd.DataFrame):
-    """Build lag, MA, smoothing, log transform."""
-    q_high = df["sales"].quantile(0.98)
+    """Build lag and MA features + smooth + log-transform."""
+    q_high = df["sales"].quantile(0.98)  # gunakan q98 agar model lebih fleksibel
     df["sales_smooth"] = df["sales"].clip(lower=0, upper=q_high)
     df["sales_log"] = np.log1p(df["sales_smooth"])
 
@@ -60,7 +60,8 @@ def evaluate_metrics(y_true, y_pred):
 def load_calendar_2025():
     cal = pd.read_csv(CALENDAR_CSV)
     cal["date"] = pd.to_datetime(cal["date"])
-    return cal.set_index("date").sort_index()
+    cal = cal.set_index("date").sort_index()
+    return cal
 
 
 # ========================
@@ -68,18 +69,21 @@ def load_calendar_2025():
 # ========================
 def main():
     print("\n====================")
-    print(" SARIMAX — Ayam Tua (Stable Model)")
+    print(" SARIMAX — Ayam Potong (Stable Model)")
     print("====================")
 
-    # 1. Load data
+    # 1. Load data historis
     df = pd.read_csv(DATA_CSV)
     df["date"] = pd.to_datetime(df["date"])
     df = df.set_index("date").sort_index()
 
     df = df.asfreq("D")
-    df["sales"] = df["sales"].fillna(0)
+    # Rename column to 'sales' for consistency
+    if "Ayam_Potong" in df.columns:
+        df["sales"] = df["Ayam_Potong"].fillna(0)
+    else:
+        df["sales"] = df["sales"].fillna(0)
 
-    # Safety: isi kalender jika belum ada
     for col in CALENDAR_BASE_COLS:
         if col not in df.columns:
             df[col] = 0
@@ -87,10 +91,8 @@ def main():
     df_model, q_high = prepare_features(df)
     exog_cols = CALENDAR_BASE_COLS + ["lag1", "lag3", "lag7", "ma3", "ma7"]
 
-    # 2. Split train-test
+    # 2. Train-test split
     test_horizon = FORECAST_DAYS
-    if len(df_model) <= test_horizon + 10:
-        raise ValueError("Data ayat tua terlalu pendek untuk evaluasi 7 hari.")
     train = df_model.iloc[:-test_horizon]
     test = df_model.iloc[-test_horizon:]
 
@@ -112,7 +114,7 @@ def main():
         enforce_invertibility=False,
     )
 
-    print("\nFitting SARIMAX model (Ayam Tua)...")
+    print("\nFitting stable SARIMAX model...")
     res = model.fit(disp=False, maxiter=300)
 
     # 3. Evaluasi
@@ -122,12 +124,12 @@ def main():
 
     mae, rmse, mape = evaluate_metrics(y_test, y_pred)
 
-    print("\n=== EVALUASI (7 hari terakhir) — Ayam Tua ===")
+    print("\n=== EVALUASI (7 hari terakhir) — Ayam Potong ===")
     print(f"MAE  : {mae:.3f}")
     print(f"RMSE : {rmse:.3f}")
     print(f"MAPE : {mape:.2f}%")
 
-    # 4. Future forecast
+    # 4. Future forecast 7 hari
     cal2025 = load_calendar_2025()
     last_date = df_model.index.max()
 
@@ -144,8 +146,10 @@ def main():
     print("\nForecasting 7 hari ke depan...")
 
     for current_date, row in cal_future.iterrows():
+        # Calendar exog
         cal_vals = {col: int(row[col]) for col in CALENDAR_BASE_COLS}
 
+        # Dynamic lag/MA
         lag1 = last_df["sales_smooth"].iloc[-1]
         lag3 = last_df["sales_smooth"].iloc[-3]
         lag7 = last_df["sales_smooth"].iloc[-7]
@@ -164,11 +168,11 @@ def main():
             index=[current_date],
         )
 
-        # Forecast
+        # Forecast log → exp
         log_pred = res.forecast(steps=1, exog=exog_row[exog_cols])
         y_hat = np.expm1(log_pred.iloc[0])
         y_hat = max(0, y_hat)
-        y_hat = min(y_hat, q_high * 1.8)
+        y_hat = min(y_hat, q_high * 1.8)  # beri lebih fleksibel supaya weekend naik
 
         results.append((current_date, y_hat))
 
@@ -179,7 +183,7 @@ def main():
             **cal_vals,
         }
 
-    print("\n=== FUTURE FORECAST 7 HARI (STABLE MODEL) — Ayam Tua ===")
+    print("\n=== FUTURE FORECAST 7 HARI (STABLE MODEL) — Ayam Potong ===")
     for date, value in results:
         print(f"{date.strftime('%Y-%m-%d')}: {value:.2f} kg")
     

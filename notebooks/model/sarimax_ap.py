@@ -180,6 +180,12 @@ def main():
         }
 
     print("\n=== FUTURE FORECAST 7 HARI (STABLE MODEL) — Ayam Potong ===")
+    for date, value in results:
+        print(f"{date.strftime('%Y-%m-%d')}: {value:.2f} kg")
+    
+    print(f"\nRata-rata prediksi: {sum([v for _, v in results])/len(results):.2f} kg/hari")
+    
+    return results
 
 
 if __name__ == "__main__":

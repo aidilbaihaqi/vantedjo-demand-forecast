@@ -71,9 +71,10 @@ jupyter notebook
 ### Model Approach
 
 - **Baseline:** Naive & Seasonal Naive forecasts
-- **Primary:** SARIMA with seasonal patterns (s=7)
-- **Enhancement:** ARIMAX with calendar features
-- **Validation:** Rolling-origin cross-validation
+- **Primary:** SARIMAX(1,1,1)(1,1,1,7) with seasonal patterns (s=7)
+- **Enhancement:** 11 exogenous variables (calendar, lag, MA)
+- **Validation:** Rolling-origin cross-validation (7 hari terakhir)
+- **Forecast:** 7 hari dengan dynamic forecasting
 
 ## 📊 Key Performance Indicators
 
@@ -128,9 +129,36 @@ Key libraries dalam `requirements.txt`:
 
 ## 📋 Status Proyek
 
-**Current Phase:** Week 6 - Dashboard, SOP, final presentation
-**Last Updated:** November 2025
-**Version:** 1.0
+**Current Phase:** ✅ Completed - Dashboard with SARIMAX Model
+**Last Updated:** December 2025
+**Version:** 3.0.0 (SARIMAX Integration)
+
+## 🎉 Latest Update: SARIMAX Integration
+
+Dashboard telah di-upgrade dari ARIMA ke **SARIMAX(1,1,1)(1,1,1,7)** untuk akurasi lebih tinggi!
+
+### 🚀 Quick Start Dashboard:
+
+```bash
+cd vantedjo-dashboard
+pip install -r requirements.txt
+python app.py
+```
+
+Akses di: `http://localhost:5000`
+
+### ✨ Keunggulan SARIMAX:
+- ✅ Menangkap pola seasonal (weekly pattern)
+- ✅ Menggunakan 11 exogenous variables
+- ✅ Dynamic forecasting 7 hari
+- ✅ Akurasi sangat baik (MAPE < 20%)
+
+### 📚 Dokumentasi Lengkap:
+- **[PERUBAHAN_DASHBOARD.md](PERUBAHAN_DASHBOARD.md)** - Summary perubahan
+- **[vantedjo-dashboard/QUICK_START.md](vantedjo-dashboard/QUICK_START.md)** - Panduan cepat
+- **[vantedjo-dashboard/SARIMAX_INTEGRATION.md](vantedjo-dashboard/SARIMAX_INTEGRATION.md)** - Detail SARIMAX
+- **[vantedjo-dashboard/MODEL_EVALUATION.md](vantedjo-dashboard/MODEL_EVALUATION.md)** - Hasil evaluasi
+- **[vantedjo-dashboard/DOCUMENTATION_INDEX.md](vantedjo-dashboard/DOCUMENTATION_INDEX.md)** - Index dokumentasi
 
 ---
 
