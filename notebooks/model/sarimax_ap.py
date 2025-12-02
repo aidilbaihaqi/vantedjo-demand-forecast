@@ -179,13 +179,7 @@ def main():
             **cal_vals,
         }
 
-    out = pd.DataFrame(results, columns=["date", "forecast_sales"])
-    out_csv = "future_sarimax_7hari_ayam_potong_stable.csv"
-    out.to_csv(out_csv, index=False)
-
     print("\n=== FUTURE FORECAST 7 HARI (STABLE MODEL) — Ayam Potong ===")
-    print(out)
-    print(f"\nHasil disimpan ke: {out_csv}")
 
 
 if __name__ == "__main__":
