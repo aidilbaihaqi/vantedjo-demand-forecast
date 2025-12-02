@@ -7,6 +7,15 @@ function formatDate(dateString) {
     return date.toLocaleDateString('id-ID', options);
 }
 
+// Update periode prediksi
+function updatePeriod(period) {
+    const periodEl = document.getElementById('predictionPeriod');
+    if (periodEl) {
+        periodEl.textContent = period;
+        console.log('✅ Period updated:', period);
+    }
+}
+
 // Load data prediksi
 async function loadPredictions() {
     try {
@@ -19,6 +28,8 @@ async function loadPredictions() {
         console.log('📊 Data:', result.data);
         
         if (result.success) {
+            console.log('🎯 Updating period...');
+            updatePeriod(result.period);
             console.log('🎯 Updating stats...');
             updateStats(result.data);
             console.log('📈 Updating chart...');

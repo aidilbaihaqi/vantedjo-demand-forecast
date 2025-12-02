@@ -1,4 +1,4 @@
-date,Ayam_Tua,is_closed,dow,is_weekend,is_event,pre_event_peak,restock_flag
+date,sales,is_closed,dow,is_weekend,is_event,pre_event_peak,restock_flag
 2024-01-01,0.0,1,0,0,0,0,0
 2024-01-02,16.14,0,1,0,0,0,0
 2024-01-03,5.2,0,2,0,0,0,0
