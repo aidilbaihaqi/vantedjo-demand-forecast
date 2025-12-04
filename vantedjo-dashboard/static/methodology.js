@@ -144,7 +144,7 @@ function createComparisonChart(historical, predictions) {
     const histKampung = historical.ayam_kampung.slice(-last30Days);
     const histTua = historical.ayam_tua.slice(-last30Days);
     
-    // Prediksi 14 hari
+    // Prediksi 7 hari
     const predLabels = predictions.dates.map(d => formatDate(d));
     const predPotong = predictions.ayam_potong;
     const predKampung = predictions.ayam_kampung;
@@ -252,7 +252,7 @@ function createComparisonChart(historical, predictions) {
                 },
                 title: {
                     display: true,
-                    text: 'Perbandingan: Data Historis (30 hari) vs Prediksi (14 hari)',
+                    text: 'Perbandingan: Data Historis (30 hari) vs Prediksi (7 hari)',
                     color: '#e0e0e0',
                     font: { size: 16, weight: 'bold' }
                 }
