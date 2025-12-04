@@ -35,20 +35,20 @@ class SARIMAXPredictor:
         self.models = {}
         self.model_params = {
             'ayam_potong': {
-                'filename': 'ts_ayam_potong_clean.csv',
-                'column': 'Ayam_Potong',
+                'filename': 'sarimax_ap_clean.csv',
+                'column': 'sales',
                 'order': (1, 1, 1),
                 'seasonal_order': (1, 1, 1, 7)
             },
             'ayam_kampung': {
-                'filename': 'ts_ayam_kampung_clean.csv',
-                'column': 'Ayam_Kampung',
+                'filename': 'sarimax_ak_clean.csv',
+                'column': 'sales',
                 'order': (1, 1, 1),
                 'seasonal_order': (1, 1, 1, 7)
             },
             'ayam_tua': {
-                'filename': 'ts_ayam_tua_clean.csv',
-                'column': 'Ayam_Tua',
+                'filename': 'sarimax_at_clean.csv',
+                'column': 'sales',
                 'order': (1, 1, 1),
                 'seasonal_order': (1, 1, 1, 7)
             }
@@ -57,9 +57,12 @@ class SARIMAXPredictor:
     def load_data(self, filename, column_name):
         """Load data dari CSV"""
         try:
-            df = pd.read_csv(f'{self.data_path}/{filename}', parse_dates=['date'])
+            df = pd.read_csv(f'{self.data_path}/{filename}')
+            # Parse date dengan format M/D/YYYY
+            df['date'] = pd.to_datetime(df['date'], format='%m/%d/%Y')
             df = df.set_index('date').sort_index()
             df = df.asfreq('D')
+            # Kolom sales sudah ada di file SARIMAX baru
             df['sales'] = df[column_name].fillna(0)
             return df
         except Exception as e:

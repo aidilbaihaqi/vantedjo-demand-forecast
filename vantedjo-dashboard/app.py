@@ -15,16 +15,22 @@ DATA_PATH = 'data'
 USE_SARIMAX = True  # Set False untuk menggunakan baseline sederhana
 
 def load_data():
-    """Load semua data time series yang sudah diproses"""
+    """Load semua data time series yang sudah diproses dari file SARIMAX"""
     try:
-        df_ap = pd.read_csv(f'{DATA_PATH}/ts_ayam_potong_clean.csv', parse_dates=['date'])
-        df_ak = pd.read_csv(f'{DATA_PATH}/ts_ayam_kampung_clean.csv', parse_dates=['date'])
-        df_at = pd.read_csv(f'{DATA_PATH}/ts_ayam_tua_clean.csv', parse_dates=['date'])
+        # Load dari file SARIMAX yang sudah memiliki fitur lengkap
+        df_ap = pd.read_csv(f'{DATA_PATH}/sarimax_ap_clean.csv')
+        df_ak = pd.read_csv(f'{DATA_PATH}/sarimax_ak_clean.csv')
+        df_at = pd.read_csv(f'{DATA_PATH}/sarimax_at_clean.csv')
         
-        # Rename kolom untuk konsistensi
-        df_ap.rename(columns={'Ayam_Potong': 'quantity'}, inplace=True)
-        df_ak.rename(columns={'Ayam_Kampung': 'quantity'}, inplace=True)
-        df_at.rename(columns={'Ayam_Tua': 'quantity'}, inplace=True)
+        # Parse date dengan format M/D/YYYY
+        df_ap['date'] = pd.to_datetime(df_ap['date'], format='%m/%d/%Y')
+        df_ak['date'] = pd.to_datetime(df_ak['date'], format='%m/%d/%Y')
+        df_at['date'] = pd.to_datetime(df_at['date'], format='%m/%d/%Y')
+        
+        # Rename kolom sales ke quantity untuk konsistensi dengan API
+        df_ap.rename(columns={'sales': 'quantity'}, inplace=True)
+        df_ak.rename(columns={'sales': 'quantity'}, inplace=True)
+        df_at.rename(columns={'sales': 'quantity'}, inplace=True)
         
         return {
             'ayam_potong': df_ap,
